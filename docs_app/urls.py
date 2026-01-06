@@ -1,6 +1,7 @@
 from django.urls import path
-from docs_app.views import AnswerQuestion
+from .views import AnswerQuestion, home
 
 urlpatterns = [
+    path('', home, name='home'),
     path('answer/', AnswerQuestion.as_view(), name='answer_question'),
 ]

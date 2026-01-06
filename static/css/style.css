@@ -1,0 +1,23 @@
+/* static/css/style.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background: 000;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.neon-glow {
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.6), 0 0 40px rgba(138, 43, 226, 0.4);
+}
+
+.neon-text {
+    text-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+}
+
+.input-glow:focus {
+    outline: none;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+}

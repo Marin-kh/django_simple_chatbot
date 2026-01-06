@@ -2,11 +2,12 @@ from dotenv import load_dotenv
 import os
 from django.http import JsonResponse
 from django.views import View
+from django.shortcuts import render
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import PromptTemplate
 from langchain_classic.chains import LLMChain
 from .models import Query
-from .utils import vector_store
+from .vectorstore import get_vector_store
 
 load_dotenv()
 
@@ -16,6 +17,7 @@ class AnswerQuestion(View):
         if not question:
             return JsonResponse({'error': 'سوالی وارد نشده'}, status=400)
 
+        vector_store = get_vector_store()
         retrieved_docs = vector_store.similarity_search(question, k=3)
 
         if not retrieved_docs:
@@ -25,7 +27,7 @@ class AnswerQuestion(View):
 
             print("\nRetrieved documents:\n")
             for i, doc in enumerate(retrieved_docs):
-                print(f"document {i}:\n{doc.page_content}\n")
+                print(f"document {i}:\n{doc.page_content}\nmetadata= {doc.metadata}\nid= {doc.id}\n")
 
             llm = init_chat_model("llama-3.1-8b-instant", model_provider="groq")
 
@@ -46,3 +48,7 @@ class AnswerQuestion(View):
         query.save()
 
         return JsonResponse({'answer': answer})
+
+
+def home(request):
+    return render(request, 'index.html')
