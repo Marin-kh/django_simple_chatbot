@@ -1,0 +1,10 @@
+Django==5.0
+langchain
+langchain-huggingface
+langchain-community
+langchain-core
+langchain-groq
+groq
+python-dotenv
+sentence-transformers
+tf-keras
