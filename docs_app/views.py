@@ -6,11 +6,9 @@ from langchain.chat_models import init_chat_model
 from langchain_core.prompts import PromptTemplate
 from langchain_classic.chains import LLMChain
 from .models import Query
-from .signals import vector_store
+from .utils import vector_store
 
 load_dotenv()
-
-print(f"\n\nGROQ_API_KEY: {os.environ["GROQ_API_KEY"]}\n")
 
 class AnswerQuestion(View):
     def get(self, request):
@@ -18,20 +16,17 @@ class AnswerQuestion(View):
         if not question:
             return JsonResponse({'error': 'سوالی وارد نشده'}, status=400)
 
-        print("VECTOR STORE ID (signals):", id(vector_store))
-
         retrieved_docs = vector_store.similarity_search(question, k=3)
 
         if not retrieved_docs:
             answer = "متأسفانه بخش مرتبطی در اسناد پیدا نشد."
         else:
             context = "\n\n".join([doc.page_content for doc in retrieved_docs])
-            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-            for d in retrieved_docs:
-                print("----")
-                print(d.metadata)
-                print(d.page_content[:200])
-            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            print("\nRetrieved documents:\n")
+            for i, doc in enumerate(retrieved_docs):
+                print(f"document {i}:\n{doc.page_content}\n")
+
             llm = init_chat_model("llama-3.1-8b-instant", model_provider="groq")
 
             prompt = PromptTemplate.from_template(
